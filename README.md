@@ -1,27 +1,51 @@
-# Bildformat — Redimensionador de imágenes para redes sociales
+# Bildformat — bildformat-tool.de
 
-Web 100 % en alemán. Toda la interfaz que ve el visitante está en alemán; esta nota es para el propietario.
+Web alemana para recortar y adaptar imágenes a los formatos de redes sociales.
+Toda la interfaz que ve el visitante está en alemán; estas notas son para el propietario.
 
-## Qué es
+**En vivo:** https://bildformat-tool.de
+**Hosting:** GitHub Pages (gratis) · **Dominio:** netcup (~5 €/año) · **Coste mensual: 0 €**
 
-Herramienta que corre por completo en el navegador del visitante (las imágenes **no se suben a ningún servidor**): recorte visual con arrastre y zoom, modo «Einpassen» (encajar con relleno de color o fondo difuminado), exportación multiformato en ZIP, salida PNG/JPG/WebP con control de calidad y peso en vivo.
+## Cómo funciona la publicación
+
+Cada cambio que se sube a la rama `main` se publica solo en un par de minutos
+(flujo `.github/workflows/pages.yml`). No hay que subir nada por FTP ni tocar el hosting.
+
+## Estado actual: fase de prueba (sin monetizar)
+
+- Sin publicidad: el interruptor `adsEnabled` de `lib/manifest.js` está en `false`,
+  así que los tres huecos ANZEIGE quedan ocultos.
+- `impressum.html` es una página de contacto de proyecto privado no comercial.
+- `datenschutz.html` está completa y al día (procesamiento local, hosting GitHub Pages,
+  sin scripts de terceros).
+- Medición: Google Search Console (impresiones y clics desde Google), sin rastreadores
+  en la web ni cookies de terceros.
 
 ## Estructura
 
-- `index.html` — la herramienta + contenido SEO (pasos, tabla de medidas 2026, ideas de uso, FAQ).
-- `impressum.html` / `datenschutz.html` — páginas legales alemanas (§5 DDG y RGPD).
-- `lib/manifest.js` — **tabla de datos con todos los formatos por plataforma**. Para actualizar medidas cada temporada se edita solo este archivo (y se sube el `?v=` de los HTML).
-- `lib/vendor/jszip.min.js` — librería del ZIP (JSZip 3.10.1, versión fijada).
-- `main.js` / `styles.css` — lógica y diseño.
-- `.htaccess` — caché y tipos MIME para hosting Apache/LiteSpeed.
-- `assets/og-image.png` — imagen para compartir en redes; se regenera con `python tools/generar-og-image.py` (necesita Pillow).
-- `tools/` — scripts de desarrollo; no hace falta subirlos al hosting.
+- `index.html` — la herramienta + contenido SEO (pasos, tabla de medidas, usos, FAQ).
+- `impressum.html` / `datenschutz.html` — páginas legales.
+- `lib/manifest.js` — **tabla de datos con todos los formatos por plataforma** y el
+  interruptor de publicidad. Para actualizar medidas cada temporada se edita solo
+  este archivo (y se sube el número de `?v=` en los HTML para refrescar la caché).
+- `lib/vendor/jszip.min.js` — librería para el ZIP (JSZip 3.10.1).
+- `main.js` / `styles.css` — lógica y diseño (claro y oscuro automáticos).
+- `CNAME` — declara el dominio propio a GitHub Pages. No borrar.
+- `robots.txt` / `sitemap.xml` — para buscadores.
+- `assets/og-image.png` — imagen al compartir; se regenera con `python tools/generar-og-image.py`.
+- `.htaccess` — solo se usaría en un hosting Apache; en GitHub Pages se ignora.
 
-## Antes de publicar (obligatorio)
+## Para monetizar (fase 2)
 
-1. **Rellenar los huecos amarillos** de `impressum.html` y `datenschutz.html` (nombre, dirección, email, teléfono, hosting…). Están marcados como `[HIER … EINTRAGEN]`.
-2. Añadir la URL canónica en `index.html` (hay un comentario `TODO` en el `<head>`).
-3. Los huecos de publicidad (marcados ANZEIGE) están **ocultos** en la fase de prueba: el interruptor `adsEnabled` en `lib/manifest.js` está en `false`. Para la fase de monetización: poner `adsEnabled: true`, completar el Impressum con datos reales (y Gewerbe hecho), y pegar el código del anunciante dentro del bloque bloqueado por el banner de cookies (comentario en el `<head>` de `index.html`), para que solo cargue tras la aceptación del visitante.
+1. Dar de alta el Gewerbe (obligatorio para ingresos por publicidad en Alemania).
+2. Sustituir `impressum.html` por la versión completa del §5 DDG: la plantilla con los
+   huecos está guardada en el repositorio `Moin`, rama `claude/image-resizer-social-media-6clex9`,
+   carpeta `bildformat/`. Si no se quiere publicar la dirección privada, se puede alquilar
+   una dirección de Impressum-Service.
+3. Poner `adsEnabled: true` en `lib/manifest.js` → reaparecen los huecos ANZEIGE.
+4. Pegar el código del anunciante dentro del bloque `<script type="text/plain" data-consent>`
+   del `<head>` de `index.html`, para que solo cargue tras la aceptación del banner de cookies.
+5. Añadir el proveedor de publicidad a `datenschutz.html`.
 
 ## Vista previa local
 
@@ -29,4 +53,4 @@ Herramienta que corre por completo en el navegador del visitante (las imágenes 
 python -m http.server 8137
 ```
 
-y abrir http://localhost:8137/ (no abrir los archivos con doble clic: la vista previa necesita un servidor).
+y abrir http://localhost:8137/ (no vale abrir los archivos con doble clic).
